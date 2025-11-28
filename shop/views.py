@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product
 from .cart import Cart
 from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm
 
 def home(request):
     return render(request, "shop/home.html")
@@ -49,3 +50,18 @@ def update_cart(request, product_id):
         cart.remove(product_id)
     
     return redirect("cart")
+
+# User forms/views
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Konto wurde erstellt!"
+                )
+            return redirect("login")
+    else:
+        form = UserCreationForm()
+    return render(request, "shop/register.html", {"form": form})
