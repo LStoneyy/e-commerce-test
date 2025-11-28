@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: e-commerce-test
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app               
+      - dev_db:/app/db      
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+    restart: unless-stopped
+
+volumes:
+  dev_db:
