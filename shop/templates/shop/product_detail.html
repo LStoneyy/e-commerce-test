@@ -1,0 +1,24 @@
+{% extends "shop/base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<div>
+    {% if product.image %}
+        <img src="{{ product.image.url }}">
+    {% else %}
+        Kein Bild
+    {% endif %}
+
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.description }}</p>
+    <h3>{{ product.price }} €</h3>
+    <p>Verfügbar: {{ product.stock }} Stück</p>
+    
+    {% if product.stock > 0 %}
+        <a href="{% url 'add_to_cart' product.id %}">In den Warenkorb</a>
+    {% else %}
+        <button disabled>Ausverkauft</button>
+    {% endif %}
+    
+    <a href="{% url 'products' %}">Zurück</a>
+</div>
+{% endblock %}
