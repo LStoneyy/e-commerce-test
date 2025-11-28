@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Product
+from .models import Product, CartItem
 from .cart import Cart
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
@@ -50,6 +50,23 @@ def update_cart(request, product_id):
         cart.remove(product_id)
     
     return redirect("cart")
+
+def merge_cart(request):
+    if not request.user.is_authenticated:
+        return
+
+    cart = Cart(request)
+
+    for item in cart:
+        CartItem.objects.update_or_create(
+            user=request.user,
+            product=item["product"],
+            defaults={"quantity": item["quantity"]},
+        )
+    
+    # für leere session
+    cart.clear()
+
 
 # User forms/views
 def register(request):
