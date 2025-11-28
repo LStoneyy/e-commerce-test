@@ -81,4 +81,4 @@ def register(request):
             return redirect("login")
     else:
         form = UserCreationForm()
-    return render(request, "shop/register.html", {"form": form})
+    return render(request, "registration/registration.html", {"form": form})
