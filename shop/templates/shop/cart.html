@@ -1,0 +1,45 @@
+{% extends "shop/base.html" %}
+{% block title %}Warenkorb{% endblock %}
+{% block content %}
+<div>
+    <h1>Warenkorb</h1>
+
+    {% if cart %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Produkt</th>
+                    <th>Preis</th>
+                    <th>Anzahl</th>
+                    <th>Gesamt</th>
+                    <th>Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>FORM</td>
+                    <td>{{ item.total_price }}</td>
+                    <td>
+                        <a href="{% url "remove_from_cart" item.product.id %}">Entfernen</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>Gesamtsumme:</td>
+                    <td>{{ cart.get_total_price }} €</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <a href="{% url "checkout" %}">Zur Kasse</a>
+
+        {% else %}
+        <p>Der Warenkorb ist leer.</p>
+    {% endif %}
+</div>
+{% endblock %}
