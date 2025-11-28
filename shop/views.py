@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product
 from .cart import Cart
+from django.contrib import messages
 
 def home(request):
     return render(request, "shop/home.html")
@@ -23,11 +24,19 @@ def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
     cart.add(product=product, quantity=1)
+    messages.success(
+        request,
+        f"{product.name} wurde zum Warenkorb hinzugefügt"
+        )
     return redirect("products")
 
 def remove_from_cart(request, product_id):
     cart = Cart(request)
     cart.remove(product_id)
+    messages.success(
+        request,
+        "Produkt wurde zum entfernt"
+        )
     return redirect("cart")
 
 def update_cart(request, product_id):
