@@ -1,0 +1,16 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label>Benutzername:</label> {{ form.username }}
+        <label>Passwort:</label> {{ form.password }}
+        <button type="submit">Einloggen</button>
+    </form>
+    <a href="{% url "register" %}">Registrieren</a>
+</div>
+{% endblock %}
