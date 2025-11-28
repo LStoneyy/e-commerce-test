@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "livereload",
     "django.contrib.staticfiles",
-    "shop",
+    "shop.apps.ShopConfig",
 ]
 
 MIDDLEWARE = [
@@ -94,3 +94,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "products"
 LOGOUT_REDIRECT_URL = "products"
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
