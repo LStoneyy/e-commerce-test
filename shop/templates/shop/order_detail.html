@@ -1,0 +1,75 @@
+{% extends "shop/base.html" %}
+{% block title %}Bestellung #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="order-detail-container">
+  <div class="order-detail-header">
+    <h1>Bestellung #{{ order.id }}</h1>
+    <span class="badge badge-{{ order.status }}">{{ order.get_status_display }}</span>
+  </div>
+
+  <div class="order-detail-grid">
+    <section class="order-info">
+      <div class="card">
+        <h2>Bestellinformationen</h2>
+        <dl class="info-list">
+          <dt>Bestelldatum</dt>
+          <dd>{{ order.created_at|date:"d. F Y, H:i" }} Uhr</dd>
+
+          <dt>Status</dt>
+          <dd>{{ order.get_status_display }}</dd>
+
+          <dt>Kunde</dt>
+          <dd>{{ order.user.username }}</dd>
+
+          <dt>E-Mail</dt>
+          <dd>{{ order.user.email }}</dd>
+        </dl>
+      </div>
+    </section>
+
+    <section class="order-items-section">
+      <div class="card">
+        <h2>Bestellte Artikel</h2>
+        <table class="order-items-table">
+          <thead>
+            <tr>
+              <th>Produkt</th>
+              <th>Menge</th>
+              <th>Einzelpreis</th>
+              <th>Gesamt</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in order.items.all %}
+            <tr>
+              <td>
+                <a href="{% url 'product_detail' item.product.id %}">
+                  {{ item.product.name }}
+                </a>
+              </td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.price }} €</td>
+              <td>{{ item.price|floatformat:2 }}€ × {{ item.quantity }} =
+                {% widthratio item.price 1 item.quantity %} €
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3"><strong>Gesamtsumme</strong></td>
+              <td><strong>{{ order.total_price }} €</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <div class="order-actions">
+    <a href="{% url 'orders' %}" class="btn-secondary">Zurück zu Bestellungen</a>
+    <a href="{% url 'products' %}" class="btn-primary">Weiter einkaufen</a>
+  </div>
+</div>
+{% endblock %}

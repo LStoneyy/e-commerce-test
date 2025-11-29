@@ -1,5 +1,72 @@
 {% extends "shop/base.html" %}
+{% block title %}Willkommen{% endblock %}
 
 {% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Willkommen in unserem Shop</h1>
+        <p>Entdecken Sie hochwertige Produkte zu fairen Preisen</p>
+        <a href="{% url 'products' %}" class="btn-primary">Jetzt entdecken</a>
+    </div>
+</section>
 
+<section class="features">
+    <div class="feature-grid">
+        <div class="feature">
+            <div class="feature-icon">📦</div>
+            <h3>Schneller Versand</h3>
+            <p>Ihre Bestellung wird innerhalb von 24 Stunden verschickt</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🔒</div>
+            <h3>Sichere Zahlung</h3>
+            <p>Alle Zahlungen werden verschlüsselt übertragen</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">↩️</div>
+            <h3>14 Tage Rückgabe</h3>
+            <p>Nicht zufrieden? Einfach zurücksenden</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">💬</div>
+            <h3>Kundenservice</h3>
+            <p>Wir sind für Sie da - schnell und kompetent</p>
+        </div>
+    </div>
+</section>
+
+{% if featured_products %}
+<section class="featured-products">
+    <h2>Ausgewählte Produkte</h2>
+    <div class="product-grid">
+        {% for product in featured_products %}
+        <article class="product-card">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+            {% else %}
+                <div class="product-image-placeholder">
+                    <span>Kein Bild</span>
+                </div>
+            {% endif %}
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <p class="product-description">{{ product.description|truncatewords:15 }}</p>
+                <p class="product-price">{{ product.price }} €</p>
+                <div class="product-actions">
+                    <a href="{% url 'product_detail' product.pk %}" class="btn-secondary">Details</a>
+                    {% if product.stock > 0 %}
+                        <a href="{% url 'add_to_cart' product.id %}" class="btn-primary">In den Warenkorb</a>
+                    {% else %}
+                        <button class="btn-disabled" disabled>Ausverkauft</button>
+                    {% endif %}
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    <div class="view-all">
+        <a href="{% url 'products' %}" class="btn-secondary">Alle Produkte ansehen</a>
+    </div>
+</section>
+{% endif %}
 {% endblock %}

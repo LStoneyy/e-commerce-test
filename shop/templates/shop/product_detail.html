@@ -1,24 +1,57 @@
 {% extends "shop/base.html" %}
 {% block title %}{{ product.name }}{% endblock %}
-{% block content %}
-<div>
-    {% if product.image %}
-        <img src="{{ product.image.url }}">
-    {% else %}
-        Kein Bild
-    {% endif %}
 
-    <h1>{{ product.name }}</h1>
-    <p>{{ product.description }}</p>
-    <h3>{{ product.price }} €</h3>
-    <p>Verfügbar: {{ product.stock }} Stück</p>
+{% block content %}
+<div class="product-detail">
+    <a href="{% url 'products' %}" class="breadcrumb">← Zurück zu Produkten</a>
     
-    {% if product.stock > 0 %}
-        <a href="{% url 'add_to_cart' product.id %}">In den Warenkorb</a>
-    {% else %}
-        <button disabled>Ausverkauft</button>
-    {% endif %}
-    
-    <a href="{% url 'products' %}">Zurück</a>
+    <div class="product-detail-grid">
+        <div class="product-image-section">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-detail-image">
+            {% else %}
+                <div class="product-detail-placeholder">
+                    <span>Kein Bild verfügbar</span>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="product-detail-info">
+            <h1>{{ product.name }}</h1>
+            
+            <p class="product-detail-price">{{ product.price }} €</p>
+            
+            <div class="product-detail-stock">
+                {% if product.stock > 5 %}
+                    <span class="stock-badge stock-available">✓ Auf Lager</span>
+                {% elif product.stock > 0 %}
+                    <span class="stock-badge stock-low">⚠ Nur noch {{ product.stock }} verfügbar</span>
+                {% else %}
+                    <span class="stock-badge stock-out">✗ Ausverkauft</span>
+                {% endif %}
+            </div>
+            
+            <div class="product-detail-description">
+                <h2>Produktbeschreibung</h2>
+                <p>{{ product.description }}</p>
+            </div>
+            
+            <div class="product-detail-actions">
+                {% if product.stock > 0 %}
+                    <a href="{% url 'add_to_cart' product.id %}" class="btn-primary btn-large">
+                        In den Warenkorb
+                    </a>
+                {% else %}
+                    <button class="btn-disabled btn-large" disabled>Ausverkauft</button>
+                {% endif %}
+            </div>
+            
+            <div class="product-detail-meta">
+                <p><strong>Artikelnummer:</strong> #{{ product.id }}</p>
+                <p><strong>Verfügbarkeit:</strong> {{ product.stock }} Stück</p>
+                <p><strong>Hinzugefügt:</strong> {{ product.created_at|date:"d.m.Y" }}</p>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

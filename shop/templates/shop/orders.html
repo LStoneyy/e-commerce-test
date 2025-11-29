@@ -1,0 +1,45 @@
+{% extends "shop/base.html" %}
+{% block title %}Meine Bestellungen{% endblock %}
+
+{% block content %}
+<div class="orders-container">
+  <h1>Meine Bestellungen</h1>
+
+  {% if orders %}
+  <div class="orders-list">
+    {% for order in orders %}
+    <article class="order-card">
+      <div class="order-header">
+        <div>
+          <h3>Bestellung #{{ order.id }}</h3>
+          <p class="order-date">{{ order.created_at|date:"d. F Y, H:i" }} Uhr</p>
+        </div>
+        <span class="badge badge-{{ order.status }}">
+          {{ order.get_status_display }}
+        </span>
+      </div>
+
+      <div class="order-items">
+        {% for item in order.items.all %}
+        <div class="order-item">
+          <span>{{ item.quantity }}x {{ item.product.name }}</span>
+          <span>{{ item.price }} €</span>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="order-footer">
+        <p class="order-total">Gesamt: <strong>{{ order.total_price }} €</strong></p>
+        <a href="{% url 'order_detail' order.id %}" class="btn-secondary">Details ansehen</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <p>Sie haben noch keine Bestellungen aufgegeben.</p>
+    <a href="{% url 'products' %}" class="btn-primary">Jetzt einkaufen</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

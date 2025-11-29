@@ -1,51 +1,87 @@
 {% extends "shop/base.html" %}
 {% block title %}Warenkorb{% endblock %}
+
 {% block content %}
-<div>
+<div class="cart-container">
     <h1>Warenkorb</h1>
-
+    
     {% if cart %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Produkt</th>
-                    <th>Preis</th>
-                    <th>Anzahl</th>
-                    <th>Gesamt</th>
-                    <th>Aktionen</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in cart %}
-                <tr>
-                    <td>{{ item.product.name }}</td>
-                    <td>{{ item.price }}</td>
-                    <td>
-                        <form action="{% url "update_cart" item.product.id %}" method="post">
-                            {% csrf_token %}
-                            <input type="number" name="quantity" id="quantity" value={{ item.quantity }}>
-                            <button type="submit">Aktualisieren</button>
-                        </form>
-                    </td>
-                    <td>{{ item.total_price }}</td>
-                    <td>
-                        <a href="{% url "remove_from_cart" item.product.id %}">Entfernen</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td>Gesamtsumme:</td>
-                    <td>{{ cart.get_total_price }} €</td>
-                </tr>
-            </tfoot>
-        </table>
-
-        <a href="{% url "home" %}">Zur Kasse</a>
-
-        {% else %}
-        <p>Der Warenkorb ist leer.</p>
+        <div class="cart-grid">
+            <section class="cart-items">
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Produkt</th>
+                            <th>Preis</th>
+                            <th>Anzahl</th>
+                            <th>Gesamt</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart %}
+                        <tr class="cart-item">
+                            <td class="cart-item-product">
+                                <a href="{% url 'product_detail' item.product.id %}">
+                                    {{ item.product.name }}
+                                </a>
+                            </td>
+                            <td class="cart-item-price">{{ item.price }} €</td>
+                            <td class="cart-item-quantity">
+                                <form method="post" action="{% url 'update_cart' item.product.id %}" class="quantity-form">
+                                    {% csrf_token %}
+                                    <input type="number" 
+                                           name="quantity" 
+                                           value="{{ item.quantity }}" 
+                                           min="1" 
+                                           max="{{ item.product.stock }}"
+                                           class="quantity-input">
+                                    <button type="submit" class="btn-small">Aktualisieren</button>
+                                </form>
+                            </td>
+                            <td class="cart-item-total">{{ item.total_price }} €</td>
+                            <td class="cart-item-actions">
+                                <a href="{% url 'remove_from_cart' item.product.id %}" class="btn-danger-small">
+                                    Entfernen
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+            
+            <aside class="cart-summary">
+                <div class="card">
+                    <h2>Zusammenfassung</h2>
+                    <dl class="summary-list">
+                        <dt>Zwischensumme</dt>
+                        <dd>{{ cart.get_total_price }} €</dd>
+                        
+                        <dt>Versandkosten</dt>
+                        <dd>Kostenlos</dd>
+                        
+                        <dt class="summary-total">Gesamtsumme</dt>
+                        <dd class="summary-total">{{ cart.get_total_price }} €</dd>
+                    </dl>
+                    
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'checkout' %}" class="btn-primary btn-large">Zur Kasse</a>
+                    {% else %}
+                        <p class="login-prompt">Bitte <a href="{% url 'login' %}?next={% url 'checkout' %}">einloggen</a> um fortzufahren</p>
+                    {% endif %}
+                    
+                    <a href="{% url 'products' %}" class="btn-secondary">Weiter einkaufen</a>
+                </div>
+            </aside>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">🛒</div>
+            <h2>Ihr Warenkorb ist leer</h2>
+            <p>Entdecken Sie unsere Produkte und fügen Sie Artikel hinzu</p>
+            <a href="{% url 'products' %}" class="btn-primary">Produkte ansehen</a>
+        </div>
     {% endif %}
 </div>
 {% endblock %}

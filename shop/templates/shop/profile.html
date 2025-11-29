@@ -1,0 +1,110 @@
+{% extends "shop/base.html" %}
+{% block title %}Mein Profil{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h1>Mein Profil</h1>
+    
+    <div class="profile-grid">
+        <section class="profile-info">
+            <div class="card">
+                <h2>Persönliche Informationen</h2>
+                <form method="post" class="profile-form">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="username">Benutzername</label>
+                        <input type="text" id="username" name="username" value="{{ user.username }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">E-Mail-Adresse</label>
+                        <input type="email" id="email" name="email" value="{{ user.email }}">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first_name">Vorname</label>
+                            <input type="text" id="first_name" name="first_name" value="{{ profile.first_name }}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="last_name">Nachname</label>
+                            <input type="text" id="last_name" name="last_name" value="{{ profile.last_name }}">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Telefonnummer</label>
+                        <input type="tel" id="phone" name="phone" value="{{ profile.phone }}" placeholder="+49 123 456789">
+                    </div>
+                    
+                    <h3>Adresse</h3>
+                    
+                    <div class="form-group">
+                        <label for="street">Straße & Hausnummer</label>
+                        <input type="text" id="street" name="street" value="{{ profile.street }}" placeholder="Musterstraße 123">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="postal_code">PLZ</label>
+                            <input type="text" id="postal_code" name="postal_code" value="{{ profile.postal_code }}" placeholder="12345">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="city">Stadt</label>
+                            <input type="text" id="city" name="city" value="{{ profile.city }}" placeholder="Musterstadt">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="country">Land</label>
+                        <input type="text" id="country" name="country" value="{{ profile.country|default:'Deutschland' }}">
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Änderungen speichern</button>
+                </form>
+            </div>
+        </section>
+        
+        <section class="profile-stats">
+            <div class="card">
+                <h2>Kontoübersicht</h2>
+                <div class="stats-grid">
+                    <div class="stat">
+                        <span class="stat-value">{{ user.order_set.count }}</span>
+                        <span class="stat-label">Bestellungen</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">{{ user.cart_items.count }}</span>
+                        <span class="stat-label">Artikel im Warenkorb</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">{{ user.date_joined|date:"Y" }}</span>
+                        <span class="stat-label">Mitglied seit</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Schnellzugriff</h2>
+                <nav class="quick-links">
+                    <a href="{% url 'orders' %}" class="quick-link">
+                        <span class="icon">📦</span>
+                        <span>Meine Bestellungen</span>
+                    </a>
+                    <a href="{% url 'cart' %}" class="quick-link">
+                        <span class="icon">🛒</span>
+                        <span>Warenkorb</span>
+                    </a>
+                    <a href="{% url 'products' %}" class="quick-link">
+                        <span class="icon">🛍️</span>
+                        <span>Produkte durchstöbern</span>
+                    </a>
+                </nav>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

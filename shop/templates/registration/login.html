@@ -1,16 +1,43 @@
 {% extends 'shop/base.html' %}
-
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<div>
-    <h2>Login</h2>
-    <form method="post">
-        {% csrf_token %}
-        <label>Benutzername:</label> {{ form.username }}
-        <label>Passwort:</label> {{ form.password }}
-        <button type="submit">Einloggen</button>
-    </form>
-    <a href="{% url "register" %}">Registrieren</a>
+<div class="auth-container">
+    <div class="auth-card card">
+        <h2>Willkommen zurück</h2>
+        <p class="auth-subtitle">Melden Sie sich an, um fortzufahren</p>
+        
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Benutzername</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <span class="form-error">{{ form.username.errors.0 }}</span>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">Passwort</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <span class="form-error">{{ form.password.errors.0 }}</span>
+                {% endif %}
+            </div>
+            
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            
+            <button type="submit" class="btn-primary btn-large">Einloggen</button>
+        </form>
+        
+        <div class="auth-footer">
+            <p>Noch kein Konto? <a href="{% url 'register' %}">Jetzt registrieren</a></p>
+        </div>
+    </div>
 </div>
 {% endblock %}

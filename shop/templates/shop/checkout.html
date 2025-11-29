@@ -1,0 +1,68 @@
+{% extends "shop/base.html" %}
+{% block title %}Zur Kasse{% endblock %}
+
+{% block content %}
+<div class="checkout-container">
+  <h1>Bestellung abschließen</h1>
+
+  <div class="checkout-grid">
+    <section class="order-summary">
+      <h2>Bestellübersicht</h2>
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th>Produkt</th>
+            <th>Menge</th>
+            <th>Preis</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart %}
+          <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }}x</td>
+            <td>{{ item.total_price }} €</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2"><strong>Gesamtsumme</strong></td>
+            <td><strong>{{ cart.get_total_price }} €</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+    </section>
+
+    <section class="checkout-actions">
+      <div class="card">
+        <h2>Lieferadresse</h2>
+        <div class="address-info">
+          <p><strong>{{ user.username }}</strong></p>
+          <p>{{ user.email }}</p>
+          <p class="text-muted">Hinweis: Vollständige Adressverwaltung folgt in der nächsten Version</p>
+        </div>
+
+        <h2>Zahlungsmethode</h2>
+        <div class="payment-methods">
+          <div class="payment-option selected">
+            <input type="radio" name="payment" id="invoice" checked>
+            <label for="invoice">
+              <span class="payment-icon">🧾</span>
+              <span>Kauf auf Rechnung</span>
+            </label>
+          </div>
+          <p class="text-muted">Weitere Zahlungsmethoden folgen in Kürze</p>
+        </div>
+
+        <form method="post" class="checkout-form">
+          {% csrf_token %}
+          <button type="submit" class="btn-primary btn-large">Jetzt kaufen</button>
+        </form>
+
+        <a href="{% url 'cart' %}" class="btn-secondary">Zurück zum Warenkorb</a>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

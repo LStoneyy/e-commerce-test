@@ -1,22 +1,42 @@
-<nav>
-    <a href="/">E-Commerce</a>
-    <div>
-        <a href="/products/">Produkte</a>
-        <a href="{% url "cart" %}">
-            Warenkorb
-            {% if cart %}
-                <span>{{ cart|length }}</span>
-            {% endif %}
-        </a>
-        {% if user.is_authenticated %}
-            <form method="POST" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit">
-                    Logout
-                </button>
-            </form>
-        {% else %}
-            <a href="{% url "login" %}">Login</a>
-        {% endif %}
+<nav class="navbar">
+    <div class="nav-brand">
+        <a href="{% url 'home' %}">E-Commerce</a>
     </div>
+    
+    <ul class="nav-links">
+        <li><a href="{% url 'products' %}">Produkte</a></li>
+        
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'orders' %}">Bestellungen</a></li>
+            <li><a href="{% url 'profile' %}">Profil</a></li>
+        {% endif %}
+        
+        <li>
+            <a href="{% url 'cart' %}" class="cart-link">
+                <span class="cart-icon">🛒</span>
+                <span class="cart-text">Warenkorb</span>
+                {% if cart %}
+                    <span class="cart-badge">{{ cart|length }}</span>
+                {% endif %}
+            </a>
+        </li>
+        
+        <li>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Theme wechseln">
+                <span class="theme-icon sun-icon">☀️</span>
+                <span class="theme-icon moon-icon">🌙</span>
+            </button>
+        </li>
+        
+        {% if user.is_authenticated %}
+            <li>
+                <form method="post" action="{% url 'logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout">Logout</button>
+                </form>
+            </li>
+        {% else %}
+            <li><a href="{% url 'login' %}" class="btn-login">Login</a></li>
+        {% endif %}
+    </ul>
 </nav>
